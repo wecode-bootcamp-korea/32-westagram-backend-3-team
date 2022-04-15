@@ -5,7 +5,6 @@ from django.views import View
 from .models import User
 from .validation import password_validation,email_validation
 
-
 class UserView(View):
     def post(self,request):
         data = json.loads(request.body) 
