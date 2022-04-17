@@ -9,6 +9,7 @@ from django.views import View
 from my_settings  import SECRET_KEY
 from users.models import User
 from users.validation import Validate
+
 class SignUpView(View):
       def post(self, request):
           try:
