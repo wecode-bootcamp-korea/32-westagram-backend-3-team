@@ -25,8 +25,7 @@ class UserView(View):
             validated_pw = validate_password(new_password)
             validated_email = validate_email(new_email)
             validated_phone_number = validate_phone_number(new_phone_number)
-        # except ValidationError as error:
-        #     JsonResponse({"message": error.messages}, status=409)
+        
         except ValidationError as error:
             return JsonResponse({"message": error.messages}, status=409)
 
