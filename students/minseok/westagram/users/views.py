@@ -4,26 +4,26 @@ from django.shortcuts import render
 
 import json, re
 
-from django.http  import JsonResponse, HttpResponse
-from django.views import View
-from my_settings  import SECRET_KEY
-from users.models import User
+from django.http      import JsonResponse, HttpResponse
+from django.views     import View
+from my_settings      import SECRET_KEY
+from users.models     import User
 from users.validation import Validation
 
 class SignUpView(View):
       def post(self, request):
           try:
-              data = json.loads(request.body)
-              email = data['email']
-              password = data['password']
-              name = data['name']
+              data         = json.loads(request.body)
+              email        = data['email']
+              password     = data['password']
+              name         = data['name']
               phone_number = data['phone_number']
-
-              if User.objects.filter(email=email).exists():
-                  return JsonResponse({'message': 'ALREADY_EXISTS'}, status = 400)
 
               Validation.email_validate(email)
               Validation.password_validate(password)
+
+              if User.objects.filter(email=email).exists():
+                  return JsonResponse({'message': 'ALREADY_EXISTS'}, status = 400)
                       
               User.objects.create(
                   name = name,
