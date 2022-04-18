@@ -1,6 +1,6 @@
 from django.urls import path
-from users.views import JoinView
+from users.views import RegisterView
 
 urlpatterns = [
-    path('/join', JoinView.as_view())
+    path('/join', RegisterView.as_view())
 ]
