@@ -1,20 +1,21 @@
 import re
 from django.http import JsonResponse
 
-def password_validation(password):
-    if len(password) < 8:
-        return JsonResponse({"message":"Incorrect password format : too short"},status=401)
-    elif re.search('[0-9]+',password) is None:
-        return JsonResponse({"message":"Incorrect password format : no numbers"},status=401)
-    elif re.search('[a-zA-Z]+',password) is None:
-        return JsonResponse({"message":"Incorrect password format : no letters"},status=401)
-    elif re.search('[`~!@#$%^&*(),<.>]+',password) is None:
-        return JsonResponse({"message":"Incorrect password format : need special letters"},status=401)
-    else:
-        return password
 
-def email_validation(email):
-    regex = '^\w+[\.\w]*@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$'
-    if re.search(regex,email) is None:
+def validate_password(password):
+    REGEX_PASSWORD = r'^(?=\w{8,}$)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).*'
+    if re.search(REGEX_PASSWORD,password):
+        return JsonResponse({"message":"Incorrect password format"},status=401)
+    return password
+
+def validate_email(email):
+    REGEX_EMAIL = r'^\w+[\.\w]*@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$'
+    if re.search(REGEX_EMAIL,email) is None:
         return JsonResponse({"message":"Incorrect email format"},status=400)
     return email
+
+def validate_phone_number(phone_number):
+    REGEX_PHONE_NUMBER = r'^\d{3}-\d{3,4}-\d{4}$'
+    if re.search(REGEX_PHONE_NUMBER,phone_number) is None:
+        return JsonResponse({"message":"Incorrect phone_number format"},status=409)
+    return phone_number
