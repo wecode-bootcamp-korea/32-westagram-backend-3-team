@@ -19,26 +19,21 @@ def check_password_validation(password):
 class RegisterView(View):
     def post(self, request):
         data = json.loads(request.body)
-        email=data['email']
-        e = list(User.objects.filter(name='user9').values())
         try :
             if check_email_validation(data['email']) == None:
-                return JsonResponse({'MESSAGE' : "Email validation error"}, status=400)
+                return JsonResponse({'MESSAGE' : "Email validation error"},    status = 400)
 
             if check_password_validation(data['password']) == None:
-                return JsonResponse({'MESSAGE' : "Password validation error"}, status=400)
-
-            if email in list(e[0].values()):
-                return JsonResponse({'MESSAGE' : 'user9'},status=400)
+                return JsonResponse({'MESSAGE' : "Password validation error"}, status = 400)
 
             if User.objects.filter(email = data["email"]).exists():
-                return JsonResponse({'MESSAGE' : 'Email already Exists'},status=400)
+                return JsonResponse({'MESSAGE' : 'Email already Exists'},      status = 400)
             
             User.objects.create(
-                name=data['name'],
-                email=data['email'],
-                password=data['password'],
-                phone_number=data['phone_number'],
+                name =          data['name'],
+                email =        data['email'],
+                password =     data['password'],
+                phone_number = data['phone_number'],
             )
             return JsonResponse({'MESSAGE' : 'SUCCESS'}, status=201)
 
