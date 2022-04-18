@@ -18,8 +18,8 @@ def check_password_validation(password):
 
 class RegisterView(View):
     def post(self, request):
-        data = json.loads(request.body)
-        try :
+        try : 
+            data = json.loads(request.body)
             if check_email_validation(data['email']) == None:
                 return JsonResponse({'MESSAGE' : "Email validation error"},    status = 400)
 
