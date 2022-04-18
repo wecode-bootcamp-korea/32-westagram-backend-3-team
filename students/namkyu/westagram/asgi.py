@@ -1,5 +1,5 @@
 """
-ASGI config for westargram project.
+ASGI config for westagram project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'westargram.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'westagram.settings')
 
 application = get_asgi_application()
