@@ -7,18 +7,20 @@ from django.views import View
 
 from users.models import User
 
-reg_email = r'^[a-zA-Z0-9+-_.]+@[a-zA-z0-9-]+\.[a-zA-z0-9-]+$'
-reg_password = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$'
+REGEX_EMAIL = r'^[a-zA-Z0-9+-_.]+@[a-zA-z0-9-]+\.[a-zA-z0-9-]+$'
+REGEX_PASSWORD = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$'
 
 def check_email_validation(email):
-    return re.match(reg_email, email)
+    return re.match(REGEX_EMAIL, email)
         
 def check_password_validation(password):
-    return re.match(reg_password, password)
+    return re.match(REGEX_PASSWORD, password)
 
 class RegisterView(View):
     def post(self, request):
         data = json.loads(request.body)
+        email=data['email']
+        e = list(User.objects.filter(name='user9').values())
         try :
             if check_email_validation(data['email']) == None:
                 return JsonResponse({'MESSAGE' : "Email validation error"}, status=400)
@@ -26,9 +28,12 @@ class RegisterView(View):
             if check_password_validation(data['password']) == None:
                 return JsonResponse({'MESSAGE' : "Password validation error"}, status=400)
 
+            if email in list(e[0].values()):
+                return JsonResponse({'MESSAGE' : 'user9'},status=400)
+
             if User.objects.filter(email = data["email"]).exists():
                 return JsonResponse({'MESSAGE' : 'Email already Exists'},status=400)
-
+            
             User.objects.create(
                 name=data['name'],
                 email=data['email'],
@@ -36,6 +41,6 @@ class RegisterView(View):
                 phone_number=data['phone_number'],
             )
             return JsonResponse({'MESSAGE' : 'SUCCESS'}, status=201)
-            
+
         except KeyError :
             return JsonResponse({'MESSAGE' : 'KEY_ERROR'}, status=400)
