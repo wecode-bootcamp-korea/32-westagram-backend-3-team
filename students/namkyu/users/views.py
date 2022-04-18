@@ -30,7 +30,7 @@ class RegisterView(View):
                 return JsonResponse({'MESSAGE' : 'Email already Exists'},      status = 400)
             
             User.objects.create(
-                name =          data['name'],
+                name =         data['name'],
                 email =        data['email'],
                 password =     data['password'],
                 phone_number = data['phone_number'],
