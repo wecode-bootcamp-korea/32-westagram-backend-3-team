@@ -13,25 +13,28 @@ class SignUpView(View):
         data = json.loads(request.body)
         
         try:
-            name = data['name']
-            email = data['email']
+            name     = data['name']
+            email    = data['email']
             password = data['password']
-            contact = data['contact']
+            contact  = data['contact']
         
-            email_regex = '([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+'
-            password_regex = r"^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z0-9$@$!%*#?&].{8,}$"
+            EMAIL_REGEX = '([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+'
+            PASSWORD_REGEX = r"^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z0-9$@$!%*#?&].{8,}$"
         
-            if re.match(email_regex, email) is None:
+            if re.match(EMAIL_REGEX, email) is None:
                 return JsonResponse({'message': 'EMAIL_INVALIDATION'}, status = 400)
         
-            if re.match(password_regex, password) is None:
+            if re.match(PASSWORD_REGEX, password) is None:
                 return JsonResponse({'message': 'PASSWORD_INVALIDATION'}, status = 400)
+    
+            if User.objects.filter(email = data['email']).exists():
+                return JsonResponse({'message':'EMAIL_ALREADY_EXISTS'}, status = 400)
         
             User.objects.create(
-                name = data['name'],
-                email = data['email'],
+                name     = data['name'],
+                email    = data['email'],
                 password = data['password'],
-                contact = data['contact']
+                contact  = data['contact']
             )
         
             return JsonResponse({'message':'SUCCESS'}, status = 201)
