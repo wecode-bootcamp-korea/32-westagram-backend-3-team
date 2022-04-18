@@ -3,8 +3,8 @@ from django.http import JsonResponse
 
 
 def validate_password(password):
-    REGEX_PASSWORD = r'^(?=\w{8,}$)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).*'
-    if re.search(REGEX_PASSWORD,password):
+    REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,}$'
+    if re.search(REGEX_PASSWORD,password) is None:
         return JsonResponse({"message":"Incorrect password format"},status=401)
     return password
 
