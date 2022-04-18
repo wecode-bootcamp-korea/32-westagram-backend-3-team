@@ -1,3 +1,4 @@
+import email
 from xml.dom import ValidationErr
 from django.shortcuts import render
 
@@ -39,4 +40,22 @@ class SignUpView(View):
         except ValidationError as e:
             return JsonResponse({"message" : e.message}, status = 400)
         
-        
+
+class LogInView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        try:
+            email = data['email']
+            password = data['password']
+            
+            if not User.objects.filter(email = email).exists():
+                return JsonResponse({'message' : 'INVALID_USER'}, status = 401)
+            
+            elif not User.objects.filter(password = password).exists():
+                return JsonResponse({'message' : 'INVALID_USER'}, status = 401)
+            
+            else:
+                return JsonResponse({'message' : 'SUCCESS'}, status = 200)
+  
+        except KeyError:
+            return JsonResponse({"message" : "KEY_ERROR"}, status = 400)
