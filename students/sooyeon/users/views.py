@@ -27,7 +27,7 @@ class SignUpView(View):
             if re.match(PASSWORD_REGEX, password) is None:
                 return JsonResponse({'message': 'PASSWORD_INVALIDATION'}, status = 400)
     
-            if User.objects.filter(email = data['email']).exists():
+            if User.objects.filter(email = email).exists():
                 return JsonResponse({'message':'EMAIL_ALREADY_EXISTS'}, status = 400)
         
             User.objects.create(
