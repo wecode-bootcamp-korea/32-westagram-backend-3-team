@@ -1,12 +1,12 @@
+from xml.dom import ValidationErr
 from django.shortcuts import render
-
-import json
 
 from django.http import JsonResponse
 from django.views import View
-
 from users.models import User
-import re
+from .validation import *
+
+import json
 
 class SignUpView(View):
     def post(self, request):
@@ -17,15 +17,9 @@ class SignUpView(View):
             email    = data['email']
             password = data['password']
             contact  = data['contact']
-        
-            EMAIL_REGEX = '([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+'
-            PASSWORD_REGEX = r"^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z0-9$@$!%*#?&].{8,}$"
-        
-            if re.match(EMAIL_REGEX, email) is None:
-                return JsonResponse({'message': 'EMAIL_INVALIDATION'}, status = 400)
-        
-            if re.match(PASSWORD_REGEX, password) is None:
-                return JsonResponse({'message': 'PASSWORD_INVALIDATION'}, status = 400)
+            
+            signup_email(email)
+            signup_password(password)
     
             if User.objects.filter(email = email).exists():
                 return JsonResponse({'message':'EMAIL_ALREADY_EXISTS'}, status = 400)
@@ -39,7 +33,10 @@ class SignUpView(View):
         
             return JsonResponse({'message':'SUCCESS'}, status = 201)
         
-        except:
-            return JsonResponse({"message": "KEY_ERROR"}, status = 400)
+        except KeyError:
+            return JsonResponse({"message" : "KEY_ERROR"}, status = 400)
+        
+        except ValidationError as e:
+            return JsonResponse({"message" : e.message}, status = 400)
         
         
