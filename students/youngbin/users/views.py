@@ -8,7 +8,7 @@ from .validation            import (
     validate_email,
     validate_phone_number)
 
-class UserView(View):
+class SignUpView(View):
     def post(self,request):
         data = json.loads(request.body) 
 
@@ -18,7 +18,7 @@ class UserView(View):
             new_name         = data['name']
             new_phone_number = data['phone_number']
 
-            validated_pw = validate_password(new_password)
+            validated_password = validate_password(new_password)
             validated_email = validate_email(new_email)
             validated_phone_number = validate_phone_number(new_phone_number)
         
@@ -27,7 +27,7 @@ class UserView(View):
 
             User.objects.create(
                 name         = new_name,
-                password     = validated_pw,
+                password     = validated_password,
                 email        = validated_email,
                 phone_number = validated_phone_number,
             )
