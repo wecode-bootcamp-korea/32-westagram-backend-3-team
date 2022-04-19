@@ -45,8 +45,10 @@ class SignInView(View):
         try:
             email    = data['email']
             password = data['password']
+
             if User.objects.filter(email=email,password=password).exists():
                 return JsonResponse({'messasge':'SUCCESS'}, status=200)
+            
             return JsonResponse({"message":"INVALID_USER."},status=401)
 
         except KeyError:
