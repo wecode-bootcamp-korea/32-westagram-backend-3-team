@@ -39,7 +39,7 @@ class SignUpView(View):
             return JsonResponse({"message": error.messages}, status=409)
 
 
-class SigninView(View):
+class SignInView(View):
     def post(self,request):
         data = json.loads(request.body) 
         try:
@@ -47,8 +47,7 @@ class SigninView(View):
             password = data['password']
             if User.objects.filter(email=email,password=password).exists():
                 return JsonResponse({'messasge':'SUCCESS'}, status=200)
-            else:
-                return JsonResponse({"message":"INVALID_USER."},status=401)
+            return JsonResponse({"message":"INVALID_USER."},status=401)
 
         except KeyError:
             return JsonResponse({"message":"KEY_ERROR"},status=400)
