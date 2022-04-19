@@ -7,6 +7,7 @@ from users.models import User
 from .validation import *
 
 import json
+import bcrypt
 
 class SignUpView(View):
     def post(self, request):
@@ -23,11 +24,13 @@ class SignUpView(View):
     
             if User.objects.filter(email = email).exists():
                 return JsonResponse({'message':'EMAIL_ALREADY_EXISTS'}, status = 400)
+            
+            hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         
             User.objects.create(
                 name     = data['name'],
                 email    = data['email'],
-                password = data['password'],
+                password = hashed_password,
                 contact  = data['contact']
             )
         
