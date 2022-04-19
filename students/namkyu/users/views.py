@@ -1,12 +1,11 @@
 import json, re, bcrypt
 
 from django.shortcuts import render
-from django.http import JsonResponse
-from django.views import View
+from django.http      import JsonResponse
+from django.views     import View
+from users.models     import User
 
-from users.models import User
-
-REGEX_EMAIL = r'^[a-zA-Z0-9+-_.]+@[a-zA-z0-9-]+\.[a-zA-z0-9-]+$'
+REGEX_EMAIL    = r'^[a-zA-Z0-9+-_.]+@[a-zA-z0-9-]+\.[a-zA-z0-9-]+$'
 REGEX_PASSWORD = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$'
 
 def check_email_validation(email):
