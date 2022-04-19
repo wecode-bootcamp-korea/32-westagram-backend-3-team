@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
-import json, re
+import json, re, bcrypt
 
 from django.http      import JsonResponse, HttpResponse
 from django.views     import View
@@ -24,11 +24,13 @@ class SignUpView(View):
 
               if User.objects.filter(email=email).exists():
                   return JsonResponse({'message': 'ALREADY_EXISTS'}, status = 400)
-                      
+              
+              password_bcrypt = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
               User.objects.create(
                   name = name,
                   email = email, 
-                  password = password, 
+                  password = password_bcrypt, 
                   phone_number = phone_number
                   )
               return JsonResponse({'message': 'SUCCESS'}, status = 201)
