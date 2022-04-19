@@ -1,4 +1,3 @@
-import email
 from xml.dom import ValidationErr
 from django.shortcuts import render
 
@@ -45,13 +44,10 @@ class LogInView(View):
     def post(self, request):
         data = json.loads(request.body)
         try:
-            email = data['email']
+            email    = data['email']
             password = data['password']
             
-            if not User.objects.filter(email = email).exists():
-                return JsonResponse({'message' : 'INVALID_USER'}, status = 401)
-            
-            elif not User.objects.filter(password = password).exists():
+            if not User.objects.filter(email = email, password = password).exists():
                 return JsonResponse({'message' : 'INVALID_USER'}, status = 401)
             
             else:
