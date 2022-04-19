@@ -6,8 +6,7 @@ from django.views import View
 from users.models import User
 from .validation import *
 
-import json
-import bcrypt
+import json, bcrypt
 
 class SignUpView(View):
     def post(self, request):
