@@ -22,7 +22,7 @@ class RegisterView(View):
         try : 
             data             = json.loads(request.body)
             entered_password = data['password']
-            hashed_password  = bcrypt.hashpw(entered_password.encode('utf-8'), bcrypt.gensalt())
+            hashed_password  = bcrypt.hashpw(entered_password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
 
             if check_email_validation(data['email']) == None:
                 return JsonResponse({'MESSAGE' : "Email validation error"},    status = 400)
