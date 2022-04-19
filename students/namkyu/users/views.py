@@ -1,6 +1,4 @@
-import json
-import re
-import bcrypt
+import json, re, bcrypt
 
 from django.shortcuts import render
 from django.http import JsonResponse
