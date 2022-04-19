@@ -21,18 +21,18 @@ class RegisterView(View):
     def post(self, request):
         try : 
             data = json.loads(request.body)
+            entered_password = data['password']
+            hashed_password = bcrypt.hashpw(entered_password.encode('utf-8'), bcrypt.gensalt())
+
             if check_email_validation(data['email']) == None:
                 return JsonResponse({'MESSAGE' : "Email validation error"},    status = 400)
 
-            if check_password_validation(data['password']) == None:
+            if check_password_validation(entered_password) == None:
                 return JsonResponse({'MESSAGE' : "Password validation error"}, status = 400)
                 
             if User.objects.filter(email = data["email"]).exists():
                 return JsonResponse({'MESSAGE' : 'Email already Exists'},      status = 400)
-            
-            entered_password = data['password']
-            hashed_password = bcrypt.hashpw(entered_password.encode('utf-8'), bcrypt.gensalt())
-
+        
             User.objects.create(
                 name =         data['name'],
                 email =        data['email'],
