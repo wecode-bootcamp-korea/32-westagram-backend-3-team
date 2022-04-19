@@ -1,5 +1,4 @@
-import json
-import bcrypt
+import json, bcrypt
 
 from django.core.exceptions import ValidationError
 from django.http            import JsonResponse
