@@ -37,23 +37,16 @@ class RegisterView(View):
             )
             return JsonResponse({'MESSAGE' : 'SUCCESS'}, status = 201)
 
-        except KeyError:
+        except KeyError :
             return JsonResponse({'MESSAGE' : 'KEY_ERROR'}, status = 400)
-
+            
 class LoginView(View):
     def get(self, request):
         try: 
             data = json.loads(request.body)
-            entered_password = ''
 
-            if not User.objects.filter(email=data['email']).exists(): #이메일존재여부
-                return JsonResponse({'MESSAGE' : 'EMAIL NOT EXIST'}, status = 401)
-            else: 
-                entered_password = data['password']
-                real_password = User.objects.get(email=data['email']).password                
-
-            if not entered_password == real_password: #비번일치여부_일치하면 로그인 성공
-                return JsonResponse({'MESSAGE' : 'PASSWORD ERROR'}, status = 401)
+            if not User.objects.filter(email=data['email'], password=data['password']).exists(): 
+                return JsonResponse({'MESSAGE' : 'INVALID_USER'}, status = 401)
             else:
                 return JsonResponse({'MESSAGE' : 'LOGIN SUCCESS'}, status = 200)
 
