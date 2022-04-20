@@ -1,6 +1,6 @@
 import json, bcrypt, jwt
 
-from westagram.settings            import SECRET_KEY
+from westagram.settings     import SECRET_KEY
 from django.core.exceptions import ValidationError
 from django.http            import JsonResponse
 from django.views           import View
