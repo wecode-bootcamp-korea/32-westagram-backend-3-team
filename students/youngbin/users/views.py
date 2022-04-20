@@ -1,4 +1,5 @@
-import json
+import json, bcrypt
+
 from django.core.exceptions import ValidationError
 from django.http            import JsonResponse
 from django.views           import View
@@ -25,9 +26,11 @@ class SignUpView(View):
             if User.objects.filter(email=new_email).exists():
                 return JsonResponse({"message":"ALREADY_EXISTED_EMAIL"},status=409)
 
+            encrypted_password = bcrypt.hashpw(validated_password.encode('utf-8'),bcrypt.gensalt()).decode('utf-8')
+
             User.objects.create(
                 name         = new_name,
-                password     = validated_password,
+                password     = encrypted_password,
                 email        = validated_email,
                 phone_number = validated_phone_number,
             )
