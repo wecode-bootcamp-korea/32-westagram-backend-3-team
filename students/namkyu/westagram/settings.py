@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-from my_settings import DATABASES, SECRET_KEY
+from my_settings import DATABASES, SECRET_KEY, SECRET_CODE, ALGORITHM
 
 import pymysql
 
@@ -30,6 +30,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+SECRET_CODE = SECRET_CODE
+
+ALGORITHM = ALGORITHM #jwt 시크릿코드, 알고리즘
 
 # Application definition
 
@@ -126,7 +129,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 APPEND_SLASH = False
 
 ##CORS
-CORS_ORIGIN_ALLOW_ALL  =True
+CORS_ORIGIN_ALLOW_ALL  = True
 CORS_ALLOW_CREDENTIALS = True
     
 CORS_ALLOW_METHODS = (
