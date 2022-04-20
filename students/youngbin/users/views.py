@@ -1,5 +1,6 @@
 import json, bcrypt, jwt
 
+from my_settings            import ALGORITHM
 from westagram.settings     import SECRET_KEY
 from django.core.exceptions import ValidationError
 from django.http            import JsonResponse
@@ -53,7 +54,7 @@ class SignInView(View):
             user             = User.objects.get(email=email)
             user_saved_db    = user.password
 
-            jwt_access_token = jwt.encode({'id':user.id},SECRET_KEY,algorithm='HS256')            
+            jwt_access_token = jwt.encode({'id':user.id},SECRET_KEY,algorithm=ALGORITHM)            
 
             if bcrypt.checkpw(password.encode('utf-8'),user_saved_db.encode('utf-8')):
                 return JsonResponse({'messasge':'SUCCESS','JWT_TOKEN':jwt_access_token}, status=200)
