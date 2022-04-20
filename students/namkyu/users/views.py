@@ -51,18 +51,19 @@ class LoginView(View):
             data             = json.loads(request.body)
             entered_email    = data['email']
             entered_password = data['password']
-            user_db          = User.objects.filter(email=entered_email)[0]
-            db_password      = user_db.password.encode('utf-8')
             secret_code      = str(SECRET_CODE)
             algorithms       = str(ALGORITHM)
-            jwt_token        = jwt.encode({'id' : user_db.id}, secret_code, algorithm = algorithms)
-
+            
             if not User.objects.filter(email=entered_email).exists(): 
-                return JsonResponse({'MESSAGE' : 'INVALID_USER'}, status = 401)
+                return JsonResponse({'MESSAGE' : 'INVALID_EMAIL'}, status = 401)
+
+            user_db          = User.objects.filter(email=entered_email)[0]
+            db_password      = user_db.password.encode('utf-8')
 
             if not bcrypt.checkpw(entered_password.encode('utf-8'), db_password): 
-                return JsonResponse({'MESSAGE' : 'INVALID_USER'}, status = 401)
+                return JsonResponse({'MESSAGE' : 'INVALID_PW'}, status = 401)
 
+            jwt_token        = jwt.encode({'id' : user_db.id}, secret_code, algorithm = algorithms)
             return JsonResponse({'MESSAGE'     : 'LOGIN SUCCESS' , 'JWT_TOKEN' : jwt_token}, status = 200)
 
         except KeyError: 
