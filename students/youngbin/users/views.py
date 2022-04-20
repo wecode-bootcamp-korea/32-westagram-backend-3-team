@@ -1,5 +1,6 @@
-import json, bcrypt
+import json, bcrypt, jwt
 
+from my_settings            import SECRET_KEY
 from django.core.exceptions import ValidationError
 from django.http            import JsonResponse
 from django.views           import View
@@ -49,10 +50,17 @@ class SignInView(View):
             email    = data['email']
             password = data['password']
 
-            if User.objects.filter(email=email,password=password).exists():
-                return JsonResponse({'messasge':'SUCCESS'}, status=200)
-            
-            return JsonResponse({"message":"INVALID_USER."},status=401)
+            user = User.objects.get(email=email)
+            user_saved_db = user.password
+
+            jwt_access_token = jwt.encode({'id':user.id},SECRET_KEY,algorithm='HS256')            
+
+            if bcrypt.checkpw(password.encode('utf-8'),user_saved_db.encode('utf-8')):
+                return JsonResponse({'messasge':'SUCCESS','JWT_TOKEN':jwt_access_token}, status=200)
+            return JsonResponse({"message":"INCORRECT_PASSWORD"},status=401)
 
         except KeyError:
             return JsonResponse({"message":"KEY_ERROR"},status=400)
+        except User.DoesNotExist:
+            return JsonResponse({"message":"NOT_REGISTERED_EMAIL"},status=401)
+        
