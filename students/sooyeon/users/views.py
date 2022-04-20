@@ -1,12 +1,12 @@
 from xml.dom import ValidationErr
 from django.shortcuts import render
 
+from django.conf import settings
 from django.http import JsonResponse
 from django.views import View
 from users.models import User
 from .validation import *
-
-import json, bcrypt
+import json, bcrypt, jwt
 
 class SignUpView(View):
     def post(self, request):
@@ -49,10 +49,25 @@ class LogInView(View):
             email    = data['email']
             password = data['password']
             
-            if not User.objects.filter(email = email, password = password).exists():
-                return JsonResponse({'message' : 'INVALID_USER'}, status = 401)
+            user = User.objects.get(email=data['email'])
+
+            if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
+                return JsonResponse({"message" : "INVALID_PASSWORD"}, status=401)
+
+            access_token = jwt.encode({"id" : user.id}, settings.SECRET_KEY, algorithm = settings.ALGORITHM)
             
-            return JsonResponse({'message' : 'SUCCESS'}, status = 200)
+            return JsonResponse({
+                 "message"      : "SUCCESS",
+                 "access_token" : access_token
+            }, status=200)
+            
+            # if not User.objects.filter(email = email, password = password).exists():
+            #     return JsonResponse({'message' : 'INVALID_USER'}, status = 401)
+            
+            # return JsonResponse({'message' : 'SUCCESS'}, status = 200)
   
         except KeyError:
             return JsonResponse({"message" : "KEY_ERROR"}, status = 400)
+        
+        except User.DoesNotExist:
+            return JsonResponse({"message" : "INVALID_EMAIL"}, status=401)
