@@ -47,11 +47,11 @@ class SignInView(View):
     def post(self,request):
         data = json.loads(request.body) 
         try:
-            email    = data['email']
-            password = data['password']
+            email            = data['email']
+            password         = data['password']
 
-            user = User.objects.get(email=email)
-            user_saved_db = user.password
+            user             = User.objects.get(email=email)
+            user_saved_db    = user.password
 
             jwt_access_token = jwt.encode({'id':user.id},SECRET_KEY,algorithm='HS256')            
 
