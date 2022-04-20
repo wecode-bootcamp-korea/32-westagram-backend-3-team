@@ -1,6 +1,6 @@
 import json, bcrypt, jwt
 
-from my_settings            import SECRET_KEY
+from westagram.settings            import SECRET_KEY
 from django.core.exceptions import ValidationError
 from django.http            import JsonResponse
 from django.views           import View
@@ -63,4 +63,3 @@ class SignInView(View):
             return JsonResponse({"message":"KEY_ERROR"},status=400)
         except User.DoesNotExist:
             return JsonResponse({"message":"NOT_REGISTERED_EMAIL"},status=401)
-        
