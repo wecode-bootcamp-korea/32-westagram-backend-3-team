@@ -1,4 +1,3 @@
-from xml.dom import ValidationErr
 from django.shortcuts import render
 
 from django.conf import settings
@@ -45,8 +44,11 @@ class SignUpView(View):
 class LogInView(View):
     def post(self, request):
         data = json.loads(request.body)
+        
         try:
-            user = User.objects.get(email=data['email'])
+            email = data['email']
+            
+            user = User.objects.get(email=email)
 
             if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
                 return JsonResponse({"message" : "INVALID_PASSWORD"}, status=401)
